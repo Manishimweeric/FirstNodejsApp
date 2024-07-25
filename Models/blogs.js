@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const BlogsSchema = new mongoose.Schema({
-  Tittle: {
+  title: {
     type: String,
     required: true,
   },
@@ -10,13 +10,20 @@ const BlogsSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  Date: {
+  Discription: {
     type: String,
     required: true,
+    unique: true,
   },
-  photo: {
-    data: Buffer,
-    contentType: String
+  Date: {
+    type: Date,
+    default :Date.now,
+  },
+  public_id: {
+    type: String,
+  },
+  image: {
+    type: String,
   }
 });
 

@@ -6,19 +6,22 @@ import { v2 as cloudinary } from 'cloudinary';
 import Post from './Models/blogs.js';
 import User from './Models/User.js';
 import Likes from './Models/Likes.js'; 
-import Comment from './Models/Comment.js'; 
-
+import Comment from './Models/Comment.js';
 import { fileURLToPath } from 'url';
-
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 // Adjust path as necessary
+
 const router= express.Router();
 const app = express();
+
 /// cloudinary account credentials
+
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,

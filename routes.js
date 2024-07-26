@@ -4,6 +4,9 @@ import path from 'path';
 import fs from 'fs/promises';
 import { v2 as cloudinary } from 'cloudinary';
 import Post from './Models/blogs.js';
+import User from './Models/User.js';
+import Likes from './Models/Likes.js'; 
+import Comment from './Models/Comment.js'; 
 
 import { fileURLToPath } from 'url';
 
@@ -119,4 +122,97 @@ router.get("/blogs", async (req, res) => {
     const posts = await Post.find()
     res.send(posts)
 })
+
+
+///////////////////////////User staff/////////////////
+
+
+//Insert user
+
+router.post("/user", async (req, res) => {
+    const user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password : req.body.password,
+    })
+    await user.save()
+    res.send(user)
+})
+
+///Display User////
+router.get("/user", async (req, res) => {
+    const users = await User.find()
+    res.send(users)
+})
+
+////////////insert likes///
+
+router.post('/like', async (req, res) => {
+    
+
+    if (!req.body.blogs_id || req.body.like === undefined || !req.body.user_id) {
+        return res.status(400).json({ message: 'Missing required fields' });
+      }
+    
+    try {
+      const existingLike = await Likes.findOne({ blogs_id: req.body.blogs_id, user_id: req.body.user_id });
+  
+      if (existingLike) {
+        await Likes.deleteOne({ _id: existingLike._id });
+        console.log('Removed existing like:', existingLike);
+        res.send({ message: 'Like removed', like: existingLike });
+      } else {
+        const newLike = new Likes({
+          blogs_id: req.body.blogs_id,
+          like: req.body.like,
+          user_id: req.body.user_id,
+        });
+        await newLike.save();
+        console.log('Added new like:', newLike);
+        res.send({ message: 'Like added', like: newLike });
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      res.status(500).send({ error: 'Error toggling like' });
+    }
+  });
+
+//////retrive rikes 
+
+router.get("/likes", async (req, res) => {
+    const likes = await Likes.find()
+    res.send(likes)
+})
+
+
+////coment8
+router.post("/comment", async (req, res) => {
+    const comment = new Comment({
+        blogs_id: req.body.blogs_id,
+        comment: req.body.comment,
+        user_id: req.body.user_id,
+    })
+    await comment.save()
+    res.send(comment)
+})
+
+/////
+router.get("/comment", async (req, res) => {
+    const commnet = await Comment.find()
+    res.send(commnet)
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export default router;

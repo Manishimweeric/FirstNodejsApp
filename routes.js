@@ -18,12 +18,14 @@ const __dirname = path.dirname(__filename);
 // Adjust path as necessary
 const router= express.Router();
 const app = express();
-/// cloudinary
+/// cloudinary account credentials
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
   });
+
+  /////Creating a local storage to store images
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, 'uploads/'));
@@ -35,6 +37,7 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage}).single('image');
   
+    //Inserting the image in the blogs you specified
 
     router.post('/blogs/:id/image', upload, async (req, res) => {
         if (req.file === undefined) {
@@ -69,8 +72,13 @@ const upload = multer({
         }
       });
 
- // to insert a new post
+ // to insert a new blogs
  router.post("/blogs", async (req, res) => {
+    
+    if (!req.body.title || !req.body.publisher || !req.body.Discription) {
+        return res.status(400).json({ message: 'Missing required fields' });
+      }
+    
     const post = new Post({
         title: req.body.title,
         publisher: req.body.publisher,
@@ -145,10 +153,11 @@ router.get("/user", async (req, res) => {
     res.send(users)
 })
 
+
+///////////////////////////////////Likes staff///////////////////////
 ////////////insert likes///
 
-router.post('/like', async (req, res) => {
-    
+router.post('/like', async (req, res) => {  
 
     if (!req.body.blogs_id || req.body.like === undefined || !req.body.user_id) {
         return res.status(400).json({ message: 'Missing required fields' });
@@ -158,8 +167,7 @@ router.post('/like', async (req, res) => {
       const existingLike = await Likes.findOne({ blogs_id: req.body.blogs_id, user_id: req.body.user_id });
   
       if (existingLike) {
-        await Likes.deleteOne({ _id: existingLike._id });
-        console.log('Removed existing like:', existingLike);
+        await Likes.deleteOne({ _id: existingLike._id });        
         res.send({ message: 'Like removed', like: existingLike });
       } else {
         const newLike = new Likes({
@@ -184,9 +192,13 @@ router.get("/likes", async (req, res) => {
     res.send(likes)
 })
 
+///////////////////////////////////Comment staff///////////////////////
 
 ////coment8
 router.post("/comment", async (req, res) => {
+    if (!req.body.blogs_id || req.body.commnent === undefined || !req.body.user_id) {
+        return res.status(400).json({ message: 'Missing required fields' });
+      }
     const comment = new Comment({
         blogs_id: req.body.blogs_id,
         comment: req.body.comment,
@@ -196,23 +208,11 @@ router.post("/comment", async (req, res) => {
     res.send(comment)
 })
 
-/////
+///// Display a commnent///
 router.get("/comment", async (req, res) => {
     const commnet = await Comment.find()
     res.send(commnet)
 })
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 export default router;

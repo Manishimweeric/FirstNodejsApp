@@ -158,6 +158,7 @@ router.get("/user", async (req, res) => {
 
 
 ///////////////////////////////////Likes staff///////////////////////
+
 ////////////insert likes///
 
 router.post('/like', async (req, res) => {  
@@ -188,7 +189,7 @@ router.post('/like', async (req, res) => {
     }
   });
 
-//////retrive rikes 
+//////Display Likes 
 
 router.get("/likes", async (req, res) => {
     const likes = await Likes.find()
@@ -197,7 +198,7 @@ router.get("/likes", async (req, res) => {
 
 ///////////////////////////////////Comment staff///////////////////////
 
-////coment8
+////Insert Commnent
 router.post("/comment", async (req, res) => {
     if (!req.body.blogs_id || req.body.commnent === undefined || !req.body.user_id) {
         return res.status(400).json({ message: 'Missing required fields' });

@@ -15,6 +15,8 @@ const commentSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+
+  
 });
 
 const comment = mongoose.model('comment', commentSchema);

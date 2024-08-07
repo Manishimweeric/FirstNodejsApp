@@ -37,7 +37,7 @@ export const login = async (req, res) => {
     }
 
     const payload = { id: user._id };
-    const token = jwt.sign(payload, jwtSecret, { expiresIn: '1min' });
+    const token = jwt.sign(payload, jwtSecret, { expiresIn: '2h' });
 
     res.json({ token: `Bearer ${token}` });
   } catch (err) {

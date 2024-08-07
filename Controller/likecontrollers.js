@@ -1,10 +1,11 @@
 import Likes from '../Models/Likes.js';
 
 export const toggleLike = async (req, res) => {
-  if (!req.body.blogs_id || req.body.like === undefined) {
+  const user_id = req.user._id;
+  if (!req.body.blogs_id || req.body.like === undefined || !user_id) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
-  const user_id = req.user._id;
+
   try {
     const existingLike = await Likes.findOne({ blogs_id: req.body.blogs_id, user_id: user_id });
 

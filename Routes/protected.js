@@ -8,4 +8,5 @@ router.get('/protected', passport.authenticate('jwt', { session: false }), (req,
   res.json({ message: 'This is a protected route', user: req.user });
 });
 
+
 export default router;

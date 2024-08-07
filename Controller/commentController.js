@@ -12,6 +12,8 @@ export const createComment = async (req, res) => {
       user_id: user_id,
     });
 
+    
+
     await comment.save();
     res.status(201).json(comment);
   } catch (error) {

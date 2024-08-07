@@ -18,6 +18,7 @@ import passportConfig from './passport.js';
 
     app.use("/blogs",blogRouter)
     app.use('/user', userRouter);
+    
     app.use('/like', likeRouter);
     app.use('/comment', commentRouter);
     app.use('/protected', protectedRoutes);

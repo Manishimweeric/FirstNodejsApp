@@ -18,8 +18,8 @@ import passportConfig from './passport.js';
 
     app.use("/blogs",blogRouter);
     app.use('/user', userRouter);
-    app.use('/like', likeRouter);
-    app.use('/comment', commentRouter);
+    app.use('/blogs', likeRouter);
+    app.use('/blogs', commentRouter);
     app.use('/protected', protectedRoutes);
 
 const start = async () => {

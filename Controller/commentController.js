@@ -1,13 +1,14 @@
 import Comment from '../Models/Comment.js';
 
 export const createComment = async (req, res) => {
-  if (!req.body.blogs_id || req.body.comment === undefined || !req.body.user_id) {
+  const user_id = req.user._id;
+  const blogs_id = req.params.blogs_id;
+  if (!blogs_id || req.body.comment === undefined || !user_id) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
-  const user_id = req.user._id;
   try {
     const comment = new Comment({
-      blogs_id: req.body.blogs_id,
+      blogs_id: blogs_id,
       comment: req.body.comment,
       user_id: user_id,
     });
@@ -35,9 +36,21 @@ export const getCommentById = async (req, res) => {
     if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
-
     res.send(comment);
   } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getCommentsForBlog = async (req, res) => {
+  const blogs_id = req.params.blogs_id;
+
+  try {
+    const comments = await Comment.find({ blogs_id: blogs_id });
+
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };

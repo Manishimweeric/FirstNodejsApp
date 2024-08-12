@@ -2,19 +2,20 @@ import Likes from '../Models/Likes.js';
 
 export const toggleLike = async (req, res) => {
   const user_id = req.user._id;
-  if (!req.body.blogs_id || req.body.like === undefined || !user_id) {
+  const blogs_id = req.params.blogs_id;
+  if (!blogs_id || req.body.like === undefined || !user_id) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
   try {
-    const existingLike = await Likes.findOne({ blogs_id: req.body.blogs_id, user_id: user_id });
+    const existingLike = await Likes.findOne({ blogs_id: blogs_id, user_id: user_id });
 
     if (existingLike) {
       await Likes.deleteOne({ _id: existingLike._id });
       res.send({ message: 'Like removed', like: existingLike });
     } else {
       const newLike = new Likes({
-        blogs_id: req.body.blogs_id,
+        blogs_id: blogs_id,
         like: req.body.like,
         user_id: user_id,
       });
@@ -47,6 +48,19 @@ export const getLikeById = async (req, res) => {
 
     res.send(like);
   } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getlikeForBlog = async (req, res) => {
+  const blogs_id = req.params.blogs_id;
+
+  try {
+    const like = await Likes.find({ blogs_id: blogs_id });
+
+    res.status(200).json(like);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };

@@ -14,8 +14,7 @@ import passportConfig from './passport.js';
 
     passportConfig(passport);
     app.use(passport.initialize());
-
-
+    
     app.use("/blogs",blogRouter);
     app.use('/user', userRouter);
     app.use('/blogs', likeRouter);

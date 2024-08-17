@@ -4,6 +4,7 @@ import { validateINPUT } from '../Controller/validateiniput.js';
 
 const router = express.Router();
 
+
 router.post('/usersignup',validateINPUT, createUser);
 router.get('/', getUsers);
 router.get('/userlogin',validateINPUT, login);

@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import request from 'supertest';
 import { app } from '../index.js';
-import { User } from '../Models/User.js';  // Ensure this import path is correct
 
 describe('User API', () => {
   let mongoServer;
+  let userData;
 
   // Set up in-memory MongoDB and connect before tests
   beforeAll(async () => {
@@ -26,47 +26,30 @@ describe('User API', () => {
   });
 
   it('should sign up a new user', async () => {
-    try {
-      const res = await request(app)
-        .post('/user/usersignup')
-        .send({
-          email: 'testuser@gmail.com',
-          password: 'password123',
-        });
+    // Define user data
+    userData = {
+      email: 'testuser@gmail.com',
+      password: 'password123',
+    };
 
-      console.log('Received response:', res.status, res.body);
-      expect(res.status).toBe(201);
-    } catch (error) {
-      console.error('Error in test:', error);
-      throw error;
-    }
+    const res = await request(app)
+      .post('/user/usersignup')
+      .send(userData);
+
+    console.log('Received response:', res.status, res.body);
+    expect(res.status).toBe(201);
   });
 
-  it('should log in an existing user', async () => {
-    try {
-      // Ensure the user exists in the database before attempting to log in
-      let existingUser = await User.findOne({ email: 'testuser@gmail.com' });
-
-      if (!existingUser) {
-        existingUser = await User.create({
-          email: 'testuser@gmail.com',
-          password: 'password123', // Ensure your model hashes passwords appropriately
-        });
-      }
-
-      const res = await request(app)
-        .post('/user/userlogin')
-        .send({
-          email: 'testuser@gmail.com',
-          password: 'password123',
-        });
-
-      console.log('Received response:', res.status, res.body);
-      expect(res.status).toBe(200); // Assuming 200 status code for successful login
-      expect(res.body).toHaveProperty('token'); // Assuming login returns a token
-    } catch (error) {
-      console.error('Error in test:', error);
-      throw error;
-    }
+  it('should log in the signed-up user', async () => {
+    const res = await request(app)
+      .post('/user/userlogin')
+      .send(userData);
+  
+    console.log('Received response:', res.status, res.body);
+    console.log('Sent data:', userData);
+    
+    // Check for the correct route and data
+    expect(res.status).toBe(200); // Assuming 200 status code for successful login
+    expect(res.body).toHaveProperty('token'); // Assuming login returns a token
   });
 });

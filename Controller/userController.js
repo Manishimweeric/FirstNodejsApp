@@ -18,6 +18,12 @@ export const getUsers = async (req, res) => {
 
 export const createUser = async (req, res) => {
   const { email, password } = req.body;
+
+  // Validate input data
+  if (!email || !password) {
+    return res.status(400).json({ error: '"email" and "password" are required' });
+  }
+  
   try {
     const newUser = new User({ email, password });
     await newUser.save();

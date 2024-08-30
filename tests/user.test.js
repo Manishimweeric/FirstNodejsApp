@@ -44,12 +44,11 @@ describe('User API', () => {
     const res = await request(app)
       .post('/user/userlogin')
       .send(userData);
-  
+       
     console.log('Received response:', res.status, res.body);
     console.log('Sent data:', userData);
     
-    // Check for the correct route and data
-    expect(res.status).toBe(200); // Assuming 200 status code for successful login
-    expect(res.body).toHaveProperty('token'); // Assuming login returns a token
+    expect(res.status).toBe(200); 
+    expect(res.body).toHaveProperty('token');
   });
 });

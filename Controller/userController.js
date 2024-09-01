@@ -4,8 +4,6 @@ import passport from 'passport';
 
 const jwtSecret = process.env.JWT_SECRET; 
 
-
-
 // Exporting functions as named exports
 export const getUsers = async (req, res) => {
   try {
